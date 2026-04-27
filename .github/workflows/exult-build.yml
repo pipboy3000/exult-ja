@@ -1,0 +1,97 @@
+name: exult-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      exult_repository:
+        description: "Repository containing the modified Exult source"
+        required: true
+        default: "pipboy3000/exult"
+      exult_ref:
+        description: "Branch, tag, or SHA for the modified Exult source"
+        required: true
+        default: "master"
+
+jobs:
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.exult_repository }}
+          ref: ${{ inputs.exult_ref }}
+          path: exult-src
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install autoconf automake libtool pkg-config sdl3 libpng libogg libvorbis fluidsynth dylibbundler
+      - name: Build Exult
+        working-directory: exult-src
+        run: |
+          autoreconf -v -i
+          ./configure --disable-mt32emu
+          make -j"$(sysctl -n hw.ncpu)"
+          make bundle_shared
+      - name: Stage macOS artifact
+        run: |
+          mkdir -p dist/exult-ja-macos
+          cp -R exult-src/Exult.app dist/exult-ja-macos/
+          go build -trimpath -o dist/exult-ja-macos/exult-ja-install ./cmd/exult-ja-install
+          cp README-ja.md dist/exult-ja-macos/
+          cp docs/distribution-layout-ja.md dist/exult-ja-macos/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exult-ja-macos
+          path: dist/exult-ja-macos
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.exult_repository }}
+          ref: ${{ inputs.exult_ref }}
+          path: exult-src
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            base-devel
+            git
+            zip
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-binutils
+            mingw-w64-x86_64-ntldd
+            mingw-w64-x86_64-sdl3
+            mingw-w64-x86_64-fluidsynth
+            mingw-w64-x86_64-libtimidity
+            mingw-w64-x86_64-libogg
+            mingw-w64-x86_64-libvorbis
+            mingw-w64-x86_64-munt-mt32emu
+            mingw-w64-x86_64-libpng
+            mingw-w64-x86_64-zlib
+      - name: Build Exult
+        working-directory: exult-src
+        run: make -f Makefile.mingw -j"$(nproc)" install U7PATH="$(pwd)/../dist/exult-ja-windows"
+      - name: Stage Windows artifact
+        shell: pwsh
+        run: |
+          go build -trimpath -o dist/exult-ja-windows/exult-ja-install.exe ./cmd/exult-ja-install
+          Copy-Item README-ja.md dist/exult-ja-windows/
+          Copy-Item docs/distribution-layout-ja.md dist/exult-ja-windows/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exult-ja-windows
+          path: dist/exult-ja-windows
