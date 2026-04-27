@@ -74,3 +74,5 @@ Windows の例:
 配布基盤の計画は [notes/exult-ja-distribution-plan-2026-04-24.md](notes/exult-ja-distribution-plan-2026-04-24.md) に保存しています。
 
 CI 方針は [docs/ci-ja.md](docs/ci-ja.md) にまとめています。
+
+保守者向けツールは [docs/maintainer-tools-ja.md](docs/maintainer-tools-ja.md) にまとめています。
