@@ -32,23 +32,31 @@ jobs:
         include:
           - goos: darwin
             goarch: amd64
+            package: ./cmd/exult-ja-install
             name: exult-ja-install-macos-amd64
           - goos: darwin
             goarch: arm64
+            package: ./cmd/exult-ja-install
             name: exult-ja-install-macos-arm64
           - goos: windows
             goarch: amd64
+            package: ./cmd/exult-ja-install
             name: exult-ja-install-windows-amd64.exe
           - goos: linux
             goarch: amd64
+            package: ./cmd/exult-ja-install
             name: exult-ja-install-linux-amd64
+          - goos: linux
+            goarch: amd64
+            package: ./cmd/exult-ja-maint
+            name: exult-ja-maint-linux-amd64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
       - run: mkdir -p dist
-      - run: go build -trimpath -o "dist/${{ matrix.name }}" ./cmd/exult-ja-install
+      - run: go build -trimpath -o "dist/${{ matrix.name }}" "${{ matrix.package }}"
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
