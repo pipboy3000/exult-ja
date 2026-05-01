@@ -25,6 +25,11 @@ var staticFiles = []string{
 	"endgame.dat",
 }
 
+var staticFileAliases = map[string][]string{
+	"initgame.dat": {"initgame.dat.disabled"},
+	"exultmsg.txt": {"u7exultmsg.txt"},
+}
+
 type compileStep struct {
 	src   string
 	obj   string
@@ -252,7 +257,7 @@ func extractStaticFiles(zipPath, outDir string) error {
 	for _, name := range staticFiles {
 		var found *zip.File
 		for _, f := range reader.File {
-			if strings.EqualFold(filepath.Base(f.Name), name) {
+			if matchesStaticFileName(filepath.Base(f.Name), name) {
 				found = f
 				break
 			}
@@ -284,6 +289,18 @@ func extractStaticFiles(zipPath, outDir string) error {
 		}
 	}
 	return nil
+}
+
+func matchesStaticFileName(actual, required string) bool {
+	if strings.EqualFold(actual, required) {
+		return true
+	}
+	for _, alias := range staticFileAliases[required] {
+		if strings.EqualFold(actual, alias) {
+			return true
+		}
+	}
+	return false
 }
 
 func ensureDisasmPatchConfig(srcDir string) error {
