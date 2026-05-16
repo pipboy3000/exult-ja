@@ -28,12 +28,14 @@ jobs:
       - name: Install dependencies
         run: |
           brew update
-          brew install autoconf automake libtool m4 pkg-config sdl3 libpng libogg libvorbis fluidsynth dylibbundler
+          brew install automake libtool pkg-config libpng zlib libogg libvorbis fluid-synth freetype bison flex sdl3 sdl3_image icu4c autoconf-archive dylibbundler
       - name: Build Exult
         working-directory: exult-src
         run: |
-          export PATH="$(brew --prefix m4)/bin:$PATH"
-          export M4="$(brew --prefix m4)/bin/m4"
+          export LDFLAGS="-L$(brew --prefix bison)/lib -L$(brew --prefix flex)/lib -L$(brew --prefix zlib)/lib"
+          export CPPFLAGS="-I$(brew --prefix flex)/include -I$(brew --prefix zlib)/include"
+          export PATH="$(brew --prefix bison)/bin:$(brew --prefix flex)/bin:$PATH"
+          export PKG_CONFIG_PATH="$(brew --prefix zlib)/lib/pkgconfig:$(brew --prefix icu4c)/lib/pkgconfig"
           autoreconf -v -i
           ./configure --disable-mt32emu
           make -j"$(sysctl -n hw.ncpu)"
