@@ -32,7 +32,6 @@ jobs:
       - name: Build Exult
         working-directory: exult-src
         run: |
-          autoreconf -v -i
           ./configure --disable-mt32emu
           make -j"$(sysctl -n hw.ncpu)"
           make bundle_shared
