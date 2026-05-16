@@ -15,6 +15,8 @@ on:
 jobs:
   macos:
     runs-on: macos-14
+    outputs:
+      artifact_url: ${{ steps.upload.outputs.artifact-url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
@@ -47,13 +49,17 @@ jobs:
           go build -trimpath -o dist/exult-ja-macos/exult-ja-install ./cmd/exult-ja-install
           cp README-ja.md dist/exult-ja-macos/
           cp docs/distribution-layout-ja.md dist/exult-ja-macos/
-      - uses: actions/upload-artifact@v4
+      - name: Upload macOS artifact
+        id: upload
+        uses: actions/upload-artifact@v4
         with:
           name: exult-ja-macos
           path: dist/exult-ja-macos
 
   windows:
     runs-on: windows-latest
+    outputs:
+      artifact_url: ${{ steps.upload.outputs.artifact-url }}
     defaults:
       run:
         shell: msys2 {0}
@@ -95,7 +101,26 @@ jobs:
           go build -trimpath -o dist/exult-ja-windows/exult-ja-install.exe ./cmd/exult-ja-install
           Copy-Item README-ja.md dist/exult-ja-windows/
           Copy-Item docs/distribution-layout-ja.md dist/exult-ja-windows/
-      - uses: actions/upload-artifact@v4
+      - name: Upload Windows artifact
+        id: upload
+        uses: actions/upload-artifact@v4
         with:
           name: exult-ja-windows
           path: dist/exult-ja-windows
+
+  artifact-links:
+    runs-on: ubuntu-latest
+    needs:
+      - macos
+      - windows
+    steps:
+      - name: Add artifact links to summary
+        run: |
+          {
+            echo "## Exult JA artifacts"
+            echo
+            echo "- [macOS artifact](${{ needs.macos.outputs.artifact_url }})"
+            echo "- [Windows artifact](${{ needs.windows.outputs.artifact_url }})"
+            echo
+            echo "Artifacts require GitHub access and expire according to repository retention settings."
+          } >> "$GITHUB_STEP_SUMMARY"
