@@ -33,7 +33,7 @@ jobs:
         working-directory: exult-src
         run: |
           export PATH="$(brew --prefix m4)/bin:$PATH"
-          export M4="$(brew --prefix m4)/bin/gm4"
+          export M4="$(brew --prefix m4)/bin/m4"
           autoreconf -v -i
           ./configure --disable-mt32emu
           make -j"$(sysctl -n hw.ncpu)"
