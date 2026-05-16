@@ -47,7 +47,7 @@ jobs:
           mkdir -p dist/exult-ja-macos
           cp -R exult-src/Exult.app dist/exult-ja-macos/
           go build -trimpath -o dist/exult-ja-macos/exult-ja-install ./cmd/exult-ja-install
-          cp README-ja.md dist/exult-ja-macos/
+          cp README.md dist/exult-ja-macos/
           cp docs/distribution-layout-ja.md dist/exult-ja-macos/
       - name: Upload macOS artifact
         id: upload
@@ -99,7 +99,7 @@ jobs:
         shell: pwsh
         run: |
           go build -trimpath -o dist/exult-ja-windows/exult-ja-install.exe ./cmd/exult-ja-install
-          Copy-Item README-ja.md dist/exult-ja-windows/
+          Copy-Item README.md dist/exult-ja-windows/
           Copy-Item docs/distribution-layout-ja.md dist/exult-ja-windows/
       - name: Upload Windows artifact
         id: upload

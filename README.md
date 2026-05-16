@@ -26,6 +26,17 @@
 
 配布物の具体的な構成は [docs/distribution-layout-ja.md](docs/distribution-layout-ja.md) にまとめています。
 
+## 生成物 / 配布候補
+
+現在の配布候補は GitHub Actions の `exult-build` で生成しています。
+
+- [exult-build workflow](https://github.com/pipboy3000/exult-ja/actions/workflows/exult-build.yml)
+- [直近の成功 run](https://github.com/pipboy3000/exult-ja/actions/runs/25948908972)
+- [macOS artifact](https://api.github.com/repos/pipboy3000/exult-ja/actions/artifacts/7029278643/zip)
+- [Windows artifact](https://api.github.com/repos/pipboy3000/exult-ja/actions/artifacts/7029284935/zip)
+
+Actions artifacts は GitHub へのログインが必要で、保持期限があります。恒久的な一般配布は GitHub Releases へ移す予定です。
+
 ## 現在の導入ツール
 
 初期版の Go 製導入ツールは、次のように使う想定です。
