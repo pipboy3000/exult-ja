@@ -28,14 +28,13 @@
 
 ## 生成物 / 配布候補
 
-現在の配布候補は GitHub Actions の `exult-build` で生成しています。
+現在の配布候補は GitHub Releases から取得できます。
 
-- [exult-build workflow](https://github.com/pipboy3000/exult-ja/actions/workflows/exult-build.yml)
-- [直近の成功 run](https://github.com/pipboy3000/exult-ja/actions/runs/25948908972)
-- [macOS artifact](https://api.github.com/repos/pipboy3000/exult-ja/actions/artifacts/7029278643/zip)
-- [Windows artifact](https://api.github.com/repos/pipboy3000/exult-ja/actions/artifacts/7029284935/zip)
+- [macOS 版 exult-ja-macos-20260516.zip](https://github.com/pipboy3000/exult-ja/releases/download/build-20260516/exult-ja-macos-20260516.zip)
+- [Windows 版 exult-ja-windows-20260516.zip](https://github.com/pipboy3000/exult-ja/releases/download/build-20260516/exult-ja-windows-20260516.zip)
+- [配布候補 release: build-20260516](https://github.com/pipboy3000/exult-ja/releases/tag/build-20260516)
 
-Actions artifacts は GitHub へのログインが必要で、保持期限があります。恒久的な一般配布は GitHub Releases へ移す予定です。
+これは暫定配布候補です。ゲーム本体データと日本語翻訳素材は含めていません。
 
 ## 現在の導入ツール
 
